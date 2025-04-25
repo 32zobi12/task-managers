@@ -1,0 +1,61 @@
+/* Иконки */
+.task-list .edit-icon,
+.task-list .trash-icon,
+.task-list .check-icon { /* Добавляем стиль для иконки выполнения */
+    width: 20px; /* Ширина иконки */
+    height: 20px; /* Высота иконки */
+    transition: transform 0.2s ease; /* Плавный переход для эффекта */
+}
+/* Кнопка для выполнения задачи */
+.task-list .complete-button {
+    background-color: #28a745; /* Цвет фона для кнопки выполнения */
+    color: white; /* Цвет текста */
+    border: none; /* Убираем границу */
+    border-radius: 20px; /* Овальная форма кнопки */
+    padding: 8px 12px; /* Отступы */
+    cursor: pointer; /* Указатель при наведении */
+    margin-right: 10px; /* Отступ */
+}
+/* Эффект при наведении на кнопку выполнения */
+.task-list .complete-button:hover {
+    background-color: #218838; /* Темнее при наведении */
+}
+.task-item {
+    background-color: #ffffff;
+    border-radius: 20px; /* Овальная форма */
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px;
+    flex: 1 1 calc(45% - 20px); /* Используем flex для адаптивности */
+    max-width: 400px; /* Максимальная ширина для карточек */
+    transition: transform 0.3s ease; /* Плавный эффект при наведении */
+}
+.task-item:hover {
+    transform: translateY(-5px); /* Подъем карточки при наведении */
+}
+/* Кнопки в карточках задач */
+.task-list button {
+    background: none; /* Убираем фон кнопки */
+    border: none; /* Убираем границу */
+    cursor: pointer; /* Указатель при наведении */
+    margin-right: 10px; /* Отступы между иконками */
+}
+
+/* Эффект при наведении на иконки */
+.task-list button:hover .edit-icon,
+.task-list button:hover .trash-icon,
+.task-list button:hover .check-icon { /* Эффект для иконки выполнения */
+    transform: scale(1.1); /* Увеличиваем иконки при наведении */
+}
+.task-item p {
+    max-height: 60px; /* Ограничение высоты для описания */
+    overflow: hidden; /* Скрыть переполнение */
+    text-overflow: ellipsis; /* Многоточие при переполнении */
+    white-space: nowrap; /* Не переносить текст на новую строку */
+}
+.task-item.completed {
+    background-color: #d4edda; /* Цвет фона для выполненных задач */
+    border: 1px solid #c3e6cb; /* Цвет границы для выполненных задач */
+}
+

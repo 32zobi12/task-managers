@@ -14,9 +14,8 @@ const App = () => {
     });
 
     useEffect(() => {
-        localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+        document.body.classList.toggle('dark', darkMode);
     }, [darkMode]);
-
     const handleLoginSuccess = () => {
         setIsAuthenticated(true);
     };

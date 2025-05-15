@@ -99,3 +99,31 @@ textarea.task-input {
         padding: 15px;
     }
 }
+/* ===== Темная тема ===== */
+body.dark .task-form-container {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+body.dark .task-form input,
+body.dark .task-form textarea {
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+body.dark .task-form label {
+    color: #ccc;
+}
+
+body.dark .submit-button {
+    background-color: #28a745;
+    color: #fff;
+}
+
+body.dark .submit-button:hover {
+    background-color: #218838;
+}

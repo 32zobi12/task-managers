@@ -13,38 +13,40 @@ const TaskItem = ({ task, handleComplete, handleEdit, handleDelete, handleSelect
     return (
         <div className={cardClass} onClick={() => handleSelectTask(task)}>
             <h3>{task.title}</h3>
-            <p className="created-at">{new Date(task.created_at).toLocaleDateString()}</p>
+            <p className="created-at">{new Date(task.created_at).toLocaleString()}</p>
             <p>{truncateText(task.description, 255)}</p>
 
-            <button
-                className="complete-button"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleComplete(task.id, task.completed);
-                }}
-            >
-                {task.completed ? 'Не выполнено' : 'Выполнить'}
-            </button>
+            <div className="task-actions">
+                <button
+                    className="complete-button"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleComplete(task.id, task.completed);
+                    }}
+                >
+                    {task.completed ? 'Не выполнено' : 'Выполнить'}
+                </button>
 
-            <button
-                className="edit-button"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleEdit(task.id);
-                }}
-            >
-                <img src={editIcon} alt="Редактировать" className="edit-icon" />
-            </button>
+                <button
+                    className="edit-button"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(task.id);
+                    }}
+                >
+                    <img src={editIcon} alt="Редактировать" className="edit-icon" />
+                </button>
 
-            <button
-                className="delete-button"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(task.id);
-                }}
-            >
-                <img src={trashIcon} alt="Удалить" className="trash-icon" />
-            </button>
+                <button
+                    className="delete-button"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(task.id);
+                    }}
+                >
+                    <img src={trashIcon} alt="Удалить" className="trash-icon" />
+                </button>
+            </div>
         </div>
     );
 };

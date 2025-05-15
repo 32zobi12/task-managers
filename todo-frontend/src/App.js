@@ -6,7 +6,7 @@ import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import './App.css';
 import './styles/themes.css'; // <-- Добавим файл тем
-
+import Profile from './components/Profile';
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [darkMode, setDarkMode] = useState(() => {
@@ -44,6 +44,7 @@ const App = () => {
                         <>
                             <Link to="/tasks" className="nav-button">Мои задачи</Link>
                             <Link to="/create" className="nav-button">Создать задачу</Link>
+                            <Link to="/profile" className="nav-button">Профиль</Link>
                             <button className="nav-button logout-button" onClick={handleLogout}>Выйти</button>
                         </>
                     ) : (
@@ -60,6 +61,8 @@ const App = () => {
                         <Route path="/create" element={isAuthenticated ? <TaskForm /> : <LoginForm onLoginSuccess={handleLoginSuccess} />} />
                         <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
                         <Route path="/register" element={<RegisterForm onRegisterSuccess={handleRegisterSuccess} />} />
+                        <Route path="/profile" element={isAuthenticated ? <Profile /> : <LoginForm onLoginSuccess={handleLoginSuccess} />} />
+
                     </Routes>
                 </div>
             </div>

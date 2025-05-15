@@ -7,7 +7,7 @@
 
 body {
   font-family: 'Roboto', sans-serif;
-  background-color: #f0f4f8;
+  background-color: rgba(29,16,24);
   color: #333;
   line-height: 1.6;
 }
@@ -130,7 +130,9 @@ button:hover {
   font-size: 14px;
   margin-top: 10px;
 }
-
+body.dark {
+  background-color: #121212;
+}
 /* Адаптивность */
 @media (max-width: 768px) {
   .nav-button {
@@ -147,3 +149,4 @@ button:hover {
     padding: 20px;
   }
 }
+

@@ -6,7 +6,7 @@ from .models import Task
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id','title', 'description', 'completed']  # ”кажите пол€ модели Task, которые нужно сериализовать
+        fields = ['id','title', 'description', 'completed', 'created_at']  # ”кажите пол€ модели Task, которые нужно сериализовать
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)

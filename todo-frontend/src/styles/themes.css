@@ -1,0 +1,26 @@
+/* themes.css */
+.light {
+    background-color: #f7f7f7;
+    color: #222;
+}
+
+.dark {
+    background-color: #1e1e1e;
+    color: #f7f7f7;
+}
+
+.theme-toggle {
+    margin-left: auto;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: inherit;
+    border: 1px solid currentColor;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

@@ -4,17 +4,13 @@ __pycache__/
 *.sqlite3
 .env
 
-# Django
-db.sqlite3
-
-# Node / React
+# Node
 node_modules/
 build/
-dist/
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 .vs/
 
 # OS

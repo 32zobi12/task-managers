@@ -10,6 +10,7 @@ const LoginForm = ({ onLoginSuccess }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(''); // сбрасываем старую ошибку
 
         try {
             const response = await fetch('http://127.0.0.1:8000/api/token/', {
@@ -20,17 +21,20 @@ const LoginForm = ({ onLoginSuccess }) => {
                 body: JSON.stringify({ username, password }),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                const data = await response.json();
                 localStorage.setItem('access', data.access);
+                localStorage.setItem('refresh', data.refresh);
                 onLoginSuccess();
-                navigate('/tasks'); // Перенаправляем на страницу задач
+                navigate('/tasks');
             } else {
-                const errorData = await response.json();
-                setError(errorData.detail || 'Неверное имя пользователя или пароль');
+                console.error('Ошибка авторизации:', data);
+                setError(data.detail || 'Ошибка входа. Проверьте логин и пароль.');
             }
         } catch (err) {
-            setError('Ошибка при входе. Попробуйте позже.');
+            console.error('Ошибка сети:', err);
+            setError('Ошибка подключения к серверу.');
         }
     };
 
@@ -61,4 +65,3 @@ const LoginForm = ({ onLoginSuccess }) => {
 };
 
 export default LoginForm;
-

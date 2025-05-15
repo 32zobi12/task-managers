@@ -66,7 +66,12 @@ const TaskList = () => {
         debounce((q) => loadTasks(q), 500),
         []
     );
-    useEffect(() => debouncedSearch(searchTerm), [searchTerm, debouncedSearch]);
+    useEffect(() => {
+        debouncedSearch(searchTerm);
+        return () => {
+            debouncedSearch.cancel();
+        };
+    }, [searchTerm, debouncedSearch]);
 
     // ---------- callback-и ----------
     const handleDelete = async (id) => {

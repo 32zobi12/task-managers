@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Выполнение миграций
-python manage.py migrate
+pip install -r backend/requirements.txt
 
-# Сборка статических файлов
-python manage.py collectstatic --noinput
+# (опционально) Сборка статики и миграции
+python backend/manage.py collectstatic --noinput
+python backend/manage.py migrate

@@ -3,7 +3,7 @@ services:
     name: django-backend
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn myproject.wsgi:application"
+    startCommand: "gunicorn myproject.wsgi:application --chdir backend"
     envVars:
       - key: SECRET_KEY
         value: django-insecure-34l)ez5cw)=9c_^8h*)&8%nyv&ghsjhux*hjwn%*brb%3#eg&k

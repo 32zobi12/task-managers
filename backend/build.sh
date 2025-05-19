@@ -2,8 +2,8 @@
 set -o errexit  # Останавливает скрипт при любой ошибке
 
 # Установка зависимостей
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 
 # Миграции и сборка статики
-python backend/manage.py migrate
-python backend/manage.py collectstatic --noinput
+python manage.py migrate
+python manage.py collectstatic --noinput

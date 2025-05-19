@@ -2,7 +2,7 @@ services:
   - type: web
     name: django-backend
     env: python
-    buildCommand: "./build.sh"
+    buildCommand: "./backend/build.sh"
     startCommand: "gunicorn myproject.wsgi:application --chdir backend"
     envVars:
       - key: SECRET_KEY

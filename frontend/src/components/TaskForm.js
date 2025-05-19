@@ -1,7 +1,7 @@
 // TaskForm.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/TaskForm.css'; // Импорт стилей
+import '../styles/TaskForm.css';
 
 const TaskForm = () => {
     const [title, setTitle] = useState('');
@@ -11,9 +11,11 @@ const TaskForm = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    // Используем базовый адрес из переменной окружения
+    const API_BASE_URL = process.env.REACT_APP_API_URL;
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
 
         const token = localStorage.getItem('access');
         if (!token) {
@@ -24,7 +26,7 @@ const TaskForm = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/tasks/', {
+            const response = await fetch(`${API_BASE_URL}/tasks/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,13 +37,12 @@ const TaskForm = () => {
 
             const data = await response.json();
 
-
             if (response.ok) {
                 setSuccess('Задача создана успешно!');
                 setTitle('');
                 setDescription('');
                 setError('');
-                navigate('/tasks'); // Переход на страницу задач после создания
+                navigate('/tasks');
             } else {
                 setError(`Ошибка: ${data.detail || 'Неизвестная ошибка'}`);
             }
@@ -63,24 +64,24 @@ const TaskForm = () => {
                         id="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        maxLength={25} // Ограничение на 25 символов
+                        maxLength={25}
                         required
                         className="task-input"
                         placeholder="Введите название задачи"
                     />
-                    <small>{title.length}/25 </small> {/* Показываем количество введенных символов */}
+                    <small>{title.length}/25</small>
                 </div>
                 <div className="form-group">
                     <label>Описание задачи:</label>
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        maxLength={255} // Ограничение на 255 символов
+                        maxLength={255}
                         required
                         className="task-input"
                         placeholder="Введите описание задачи"
                     />
-                    <small>{description.length}/255</small> {/* Показываем количество введенных символов */}
+                    <small>{description.length}/255</small>
                 </div>
                 <button type="submit" className="submit-button" disabled={loading}>
                     {loading ? 'Создание...' : 'Создать задачу'}

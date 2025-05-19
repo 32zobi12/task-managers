@@ -1,6 +1,7 @@
-// taskService.js
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api';
+
 export const fetchTasks = async (token) => {
-    const response = await fetch('http://127.0.0.1:8000/api/tasks/', {
+    const response = await fetch(`${API_BASE_URL}/tasks/`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -15,7 +16,7 @@ export const fetchTasks = async (token) => {
 };
 
 export const updateTaskCompletion = async (id, completed, token) => {
-    const response = await fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/tasks/${id}/`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -31,7 +32,7 @@ export const updateTaskCompletion = async (id, completed, token) => {
 };
 
 export const deleteTask = async (id, token) => {
-    const response = await fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/tasks/${id}/`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`,

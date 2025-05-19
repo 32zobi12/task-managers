@@ -1,4 +1,3 @@
-// LoginForm.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,13 +6,16 @@ const LoginForm = ({ onLoginSuccess }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const API_BASE_URL = process.env.REACT_APP_API_URL;
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); // сбрасываем старую ошибку
+        setError('');
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/token/', {
+            const response = await fetch(`${API_BASE_URL}/token/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

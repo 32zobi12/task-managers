@@ -5,16 +5,17 @@ import { useNavigate } from 'react-router-dom';
 const RegisterForm = ({ onRegisterSuccess }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
-    const navigate = useNavigate();
+    const [error, setError]       = useState('');
+    const [success, setSuccess]   = useState(false);
+    const navigate                = useNavigate();
+
+    const API_BASE_URL = process.env.REACT_APP_API_URL;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccess(false);
 
-        // Проверка на длину имени пользователя и пароля
         if (username.length < 8) {
             setError('Имя пользователя должно содержать не менее 8 символов');
             return;
@@ -25,7 +26,7 @@ const RegisterForm = ({ onRegisterSuccess }) => {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/register/', {
+            const response = await fetch(`${API_BASE_URL}/register/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,10 +39,9 @@ const RegisterForm = ({ onRegisterSuccess }) => {
                 setUsername('');
                 setPassword('');
 
-                // Показать сообщение об успешной регистрации на 2 секунды, затем перенаправить
                 setTimeout(() => {
-                    onRegisterSuccess(); // Вызов функции для обработки успешной регистрации
-                    navigate('/login'); // Перенаправление на страницу входа
+                    onRegisterSuccess();
+                    navigate('/login');
                 }, 2000);
             } else {
                 const errorData = await response.json();
@@ -55,7 +55,7 @@ const RegisterForm = ({ onRegisterSuccess }) => {
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                <label>Username:</label>
+                <label>Имя пользователя:</label>
                 <input
                     type="text"
                     value={username}
@@ -64,7 +64,7 @@ const RegisterForm = ({ onRegisterSuccess }) => {
                 />
             </div>
             <div>
-                <label>Password:</label>
+                <label>Пароль:</label>
                 <input
                     type="password"
                     value={password}

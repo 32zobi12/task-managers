@@ -1,13 +1,17 @@
 // TaskEditForm.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/TaskEditForm.css'; // Импорт стилей
+import '../styles/TaskEditForm.css';
 
 const TaskEditForm = ({ taskId, onCancel, onUpdate }) => {
-    const [taskData, setTaskData] = useState({ title: '', description: '' });
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
+    const [taskData, setTaskData]   = useState({ title: '', description: '' });
+    const [error, setError]         = useState(null);
+    const navigate                  = useNavigate();
 
+    // ⬇️ читаем базовый адрес из .env
+    const API_BASE_URL = process.env.REACT_APP_API_URL;
+
+    /* ---------- Загрузка текущих данных задачи ---------- */
     useEffect(() => {
         const fetchTask = async () => {
             const token = localStorage.getItem('access');
@@ -15,67 +19,55 @@ const TaskEditForm = ({ taskId, onCancel, onUpdate }) => {
                 setError('Токен не найден. Пожалуйста, войдите в систему.');
                 return;
             }
-
             try {
-                const response = await fetch(`http://127.0.0.1:8000/api/tasks/${taskId}/`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
+                const res = await fetch(`${API_BASE_URL}/tasks/${taskId}/`, {
+                    headers: { Authorization: `Bearer ${token}` },
                 });
-
-                if (!response.ok) {
-                    throw new Error('Не удалось получить задачу');
-                }
-
-                const data = await response.json();
-                setTaskData(data);
-            } catch (error) {
-                setError(error.message);
+                if (!res.ok) throw new Error('Не удалось получить задачу');
+                setTaskData(await res.json());
+            } catch (err) {
+                setError(err.message);
             }
         };
-
         fetchTask();
-    }, [taskId]);
+    }, [taskId, API_BASE_URL]);
 
-    const handleChange = (e) => {
+    /* ---------- Обработчики ---------- */
+    const handleChange = e => {
         const { name, value } = e.target;
-        setTaskData({ ...taskData, [name]: value });
+        setTaskData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async e => {
         e.preventDefault();
         const token = localStorage.getItem('access');
         if (!token) {
             setError('Токен не найден. Пожалуйста, войдите в систему.');
             return;
         }
-
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/tasks/${taskId}/`, {
+            const res = await fetch(`${API_BASE_URL}/tasks/${taskId}/`, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(taskData),
             });
-
-            if (!response.ok) {
-                throw new Error('Не удалось обновить задачу');
-            }
-
-            onUpdate(); // Вызов функции обновления после успешного редактирования
-            navigate('/tasks'); // Перенаправление на страницу задач после обновления
-        } catch (error) {
-            setError(error.message);
+            if (!res.ok) throw new Error('Не удалось обновить задачу');
+            onUpdate();          // сообщаем родителю
+            navigate('/tasks');  // назад к списку
+        } catch (err) {
+            setError(err.message);
         }
     };
 
+    /* ---------- UI ---------- */
     return (
         <div className="task-edit-form-container">
             <h2>Редактировать задачу</h2>
             {error && <div className="error-message">{error}</div>}
+
             <form onSubmit={handleSubmit} className="task-edit-form">
                 <label>
                     Заголовок:
@@ -84,22 +76,24 @@ const TaskEditForm = ({ taskId, onCancel, onUpdate }) => {
                         name="title"
                         value={taskData.title}
                         onChange={handleChange}
+                        maxLength={25}
                         required
-                        maxLength={25} // Ограничение на 25 символов
                         className="task-input"
                     />
                 </label>
+
                 <label>
                     Описание:
                     <textarea
                         name="description"
                         value={taskData.description}
                         onChange={handleChange}
+                        maxLength={255}
                         required
-                        maxLength={255} // Ограничение на 255 символов
                         className="task-input"
                     />
                 </label>
+
                 <button type="submit" className="submit-button">Сохранить</button>
                 <button type="button" onClick={onCancel} className="cancel-button">Отмена</button>
             </form>

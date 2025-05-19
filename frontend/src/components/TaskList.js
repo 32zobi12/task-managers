@@ -8,8 +8,9 @@ import { deleteTask } from './taskService';
 import '../styles/TaskList.css';
 import debounce from 'lodash/debounce';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api';
+
 const TaskList = () => {
-    // ---------- state ----------
     const [tasks, setTasks] = useState([]);
     const [error, setError] = useState(null);
     const [editingTaskId, setEditingTaskId] = useState(null);
@@ -18,15 +19,12 @@ const TaskList = () => {
     const [filter, setFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
 
-    // ---------- тема ----------
     const [theme, setTheme] = useState(() =>
         typeof window !== 'undefined' && document.body.classList.contains('dark')
             ? 'dark'
             : 'light'
     );
 
-    /* Отслеживаем изменения класса <body>,
-       чтобы тема моментально подхватывалась */
     useEffect(() => {
         if (typeof window === 'undefined') return;
         const observer = new MutationObserver(() => {
@@ -36,8 +34,8 @@ const TaskList = () => {
         return () => observer.disconnect();
     }, []);
 
-    // ---------- загрузка задач ----------
-    const loadTasks = async (search = '') => {
+    // обычная функция (не useCallback)
+    const fetchTasks = async (search = '') => {
         const token = localStorage.getItem('access');
         if (!token) {
             setError('Токен не найден. Пожалуйста, войдите в систему.');
@@ -46,14 +44,15 @@ const TaskList = () => {
         }
 
         try {
-            const res = await fetch(`http://127.0.0.1:8000/api/tasks/?search=${search}`, {
+            const res = await fetch(`${API_URL}/tasks/?search=${search}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
             if (!res.ok) throw new Error('Ошибка при загрузке задач. Проверьте API.');
-            setTasks(await res.json());
+            const data = await res.json();
+            setTasks(data);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -61,11 +60,11 @@ const TaskList = () => {
         }
     };
 
-    // ---------- поиск с debounce ----------
-    const debouncedSearch = useCallback(
-        debounce((q) => loadTasks(q), 500),
-        []
-    );
+    // useCallback применяется к debounce, а не к fetchTasks
+    const debouncedSearch = useCallback(debounce((q) => {
+        fetchTasks(q);
+    }, 500), []);
+
     useEffect(() => {
         debouncedSearch(searchTerm);
         return () => {
@@ -73,7 +72,6 @@ const TaskList = () => {
         };
     }, [searchTerm, debouncedSearch]);
 
-    // ---------- callback-и ----------
     const handleDelete = async (id) => {
         const token = localStorage.getItem('access');
         if (!token) return setError('Токен не найден.');
@@ -89,7 +87,7 @@ const TaskList = () => {
         const token = localStorage.getItem('access');
         if (!token) return setError('Токен не найден.');
         try {
-            const res = await fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+            const res = await fetch(`${API_URL}/tasks/${id}/`, {
                 method: 'PATCH',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -105,20 +103,17 @@ const TaskList = () => {
         }
     };
 
-    // ---------- фильтр ----------
     const filteredTasks = tasks.filter((t) =>
         filter === 'completed' ? t.completed : filter === 'incomplete' ? !t.completed : true
     );
 
-    // ---------- UI ----------
     if (loading) return <div>Загрузка задач...</div>;
-    if (error)   return <div style={{ color: 'red' }}>{error}</div>;
+    if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
     return (
-        <div className={theme}>          {/* обёртка с классом темы */}
-            <div className="task-list">    {/* прежний контейнер */}
+        <div className={theme}>
+            <div className="task-list">
                 <DateTimeDisplay />
-
                 <h2>Список задач</h2>
 
                 <input
@@ -135,7 +130,7 @@ const TaskList = () => {
                         onCancel={() => setEditingTaskId(null)}
                         onUpdate={() => {
                             setEditingTaskId(null);
-                            loadTasks();
+                            fetchTasks();
                         }}
                     />
                 ) : selectedTask ? (
@@ -152,7 +147,7 @@ const TaskList = () => {
                         <TaskItem
                             key={task.id}
                             task={task}
-                            theme={theme}               // передаём тему карточке
+                            theme={theme}
                             handleEdit={(id) => setEditingTaskId(id)}
                             handleDelete={handleDelete}
                             handleSelectTask={(t) => setSelectedTask(t)}

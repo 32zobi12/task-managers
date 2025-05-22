@@ -19,22 +19,23 @@ const TaskList = () => {
     const [filter, setFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
 
+    /* ======= тёмная / светлая тема — как было ======= */
     const [theme, setTheme] = useState(() =>
         typeof window !== 'undefined' && document.body.classList.contains('dark')
             ? 'dark'
             : 'light'
     );
-
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        const observer = new MutationObserver(() => {
-            setTheme(document.body.classList.contains('dark') ? 'dark' : 'light');
-        });
+        const observer = new MutationObserver(() =>
+            setTheme(document.body.classList.contains('dark') ? 'dark' : 'light')
+        );
         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
         return () => observer.disconnect();
     }, []);
+    /* ================================================ */
 
-    // обычная функция (не useCallback)
+    /* ---------- загрузка задач + поиск -------------- */
     const fetchTasks = async (search = '') => {
         const token = localStorage.getItem('access');
         if (!token) {
@@ -42,7 +43,6 @@ const TaskList = () => {
             setLoading(false);
             return;
         }
-
         try {
             const res = await fetch(`${API_URL}/tasks/?search=${search}`, {
                 headers: {
@@ -60,18 +60,18 @@ const TaskList = () => {
         }
     };
 
-    // useCallback применяется к debounce, а не к fetchTasks
-    const debouncedSearch = useCallback(debounce((q) => {
-        fetchTasks(q);
-    }, 500), []);
-
+    /* ---------- debounce для поиска ----------------- */
+    const debouncedSearch = useCallback(
+        debounce((q) => fetchTasks(q), 500),
+        []
+    );
     useEffect(() => {
         debouncedSearch(searchTerm);
-        return () => {
-            debouncedSearch.cancel();
-        };
+        return () => debouncedSearch.cancel();
     }, [searchTerm, debouncedSearch]);
+    /* ------------------------------------------------ */
 
+    /* ------------- колбэки для CRUD ----------------- */
     const handleDelete = async (id) => {
         const token = localStorage.getItem('access');
         if (!token) return setError('Токен не найден.');
@@ -102,6 +102,7 @@ const TaskList = () => {
             setError(err.message);
         }
     };
+    /* ------------------------------------------------ */
 
     const filteredTasks = tasks.filter((t) =>
         filter === 'completed' ? t.completed : filter === 'incomplete' ? !t.completed : true
@@ -112,49 +113,57 @@ const TaskList = () => {
 
     return (
         <div className={theme}>
-            <div className="task-list">
+            {/*  ▸ новый «обёрточный» контейнер: центр + отступы + max-width  */}
+            <div className="task-list-wrapper">
                 <DateTimeDisplay />
+
                 <h2>Список задач</h2>
 
+                {/* ▸ input теперь full-width + адаптивный стиль из CSS */}
                 <input
                     type="text"
-                    placeholder="Search task..."
+                    placeholder="Поиск задачи..."
+                    className="task-search"
+                    value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
 
                 <FilterButtons setFilter={setFilter} />
 
-                {editingTaskId ? (
-                    <TaskEditForm
-                        taskId={editingTaskId}
-                        onCancel={() => setEditingTaskId(null)}
-                        onUpdate={() => {
-                            setEditingTaskId(null);
-                            fetchTasks();
-                        }}
-                    />
-                ) : selectedTask ? (
-                    <div className="task-details">
-                        <h3>Описание задачи</h3>
-                        <p><strong>Тема:</strong> {selectedTask.title}</p>
-                        <p><strong>Описание:</strong> {selectedTask.description}</p>
-                        <p><strong>Выполнена:</strong> {selectedTask.completed ? 'Да' : 'Нет'}</p>
-                        <p>{new Date(selectedTask.created_at).toLocaleString()}</p>
-                        <button onClick={() => setSelectedTask(null)}>Вернуться к списку</button>
-                    </div>
-                ) : (
-                    filteredTasks.map((task) => (
-                        <TaskItem
-                            key={task.id}
-                            task={task}
-                            theme={theme}
-                            handleEdit={(id) => setEditingTaskId(id)}
-                            handleDelete={handleDelete}
-                            handleSelectTask={(t) => setSelectedTask(t)}
-                            handleComplete={handleComplete}
+                {/* ▸ сами карточки / формы — внутри CSS-grid контейнера */}
+                <div className="task-list">
+                    {editingTaskId ? (
+                        <TaskEditForm
+                            taskId={editingTaskId}
+                            onCancel={() => setEditingTaskId(null)}
+                            onUpdate={() => {
+                                setEditingTaskId(null);
+                                fetchTasks();
+                            }}
                         />
-                    ))
-                )}
+                    ) : selectedTask ? (
+                        <div className="task-details">
+                            <h3>Описание задачи</h3>
+                            <p><strong>Тема:</strong> {selectedTask.title}</p>
+                            <p><strong>Описание:</strong> {selectedTask.description}</p>
+                            <p><strong>Выполнена:</strong> {selectedTask.completed ? 'Да' : 'Нет'}</p>
+                            <p>{new Date(selectedTask.created_at).toLocaleString()}</p>
+                            <button onClick={() => setSelectedTask(null)}>Вернуться к списку</button>
+                        </div>
+                    ) : (
+                        filteredTasks.map((task) => (
+                            <TaskItem
+                                key={task.id}
+                                task={task}
+                                theme={theme}
+                                handleEdit={setEditingTaskId}
+                                handleDelete={handleDelete}
+                                handleSelectTask={setSelectedTask}
+                                handleComplete={handleComplete}
+                            />
+                        ))
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -1,110 +1,79 @@
-/* === Заголовок === */
-.task-list h2 {
-    font-size: 24px;
+/* ===== ОБЁРТКА (центрирует контент на крупных экранах) ===== */
+.task-list-wrapper {
+    max-width: 1200px;   /* ≈ 75 rem — удобочитаемая ширина на десктопе */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ===== ЗАГОЛОВОК ===== */
+.task-list-wrapper h2 {
+    font-size: 1.5rem;
     text-align: center;
-    margin-bottom: 20px;
+    margin: 0 0 20px;
     color: #343a40;
 }
+body.dark .task-list-wrapper h2 { color: #f1f3f5; }
 
-body.dark .task-list h2 {
-    color: #f1f3f5;
+/* ===== ПОИСК ===== */
+.task-search {
+    width: 100%;
+    max-width: 400px;        /* чтобы на десктопе поле не растягивалось на всю ширину */
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    margin: 0 auto 20px;     /* центрируем */
+    display: block;
 }
-body.dark .task-list {
-    background-color: #1a1a1a;
-    color: #eee;
-    border: 1px solid #333;
+body.dark .task-search {
+    background-color: #2a2a2a;
+    color: #f1f1f1;
+    border-color: #444;
 }
-/* === Контейнер списка === */
+
+/* ===== СЕТКА КАРТОЧЕК / ФОРМ ===== */
+/* 1 колонка на телефоне → авто-флоу 2-3-4 колонок при увеличении ширины */
 .task-list {
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #f8f9fa;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+    padding-bottom: 40px;      /* чтобы контент не упирался в низ экрана */
 }
 
-body.dark .task-list {
-    background-color: #1a1a1a;
-}
-
-/* === Детальный просмотр задачи === */
+/* ===== КАРТОЧКА ПОДРОБНОСТЕЙ ===== */
 .task-details {
     background-color: #ffffff;
     border: 1px solid #e9ecef;
-    border-radius: 20px;
+    border-radius: 12px;
     padding: 20px;
-    max-width: 600px;
-    margin: 20px auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
+/* адаптив: растягиваемся на всю сеточную ячейку */
+.task-details,
+.task-item { width: 100%; }
 
 body.dark .task-details {
     background-color: #2a2a2a;
     border-color: #444;
 }
+.task-details h3 { font-size: 1.25rem; margin-bottom: 15px; }
+body.dark .task-details h3 { color: #f8f9fa; }
 
-.task-details h3 {
-    font-size: 22px;
-    color: #343a40;
-    margin-bottom: 15px;
-}
-
-body.dark .task-details h3 {
-    color: #f8f9fa;
-}
-
-.task-details p {
-    font-size: 16px;
-    color: #212529;
-    margin-bottom: 10px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-}
-
-body.dark .task-details p {
-    color: #e0e0e0;
-}
+.task-details p { font-size: 0.95rem; margin-bottom: 10px; line-height: 1.45; }
+body.dark .task-details p { color: #e0e0e0; }
 
 .task-details button {
     background-color: #007bff;
-    color: #ffffff;
-    border: none;
+    color: #fff;
+    border: 0;
     padding: 10px 15px;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.25s ease;
 }
+.task-details button:hover   { background-color: #0056b3; }
+body.dark .task-details button           { background-color: #339af0; }
+body.dark .task-details button:hover     { background-color: #228be6; }
 
-.task-details button:hover {
-    background-color: #0056b3;
-}
-
-body.dark .task-details button {
-    background-color: #339af0;
-}
-
-body.dark .task-details button:hover {
-    background-color: #228be6;
-}
-
-/* === Дата создания === */
-.created-at {
-    font-size: 0.8rem;
-    color: #888;
-    margin-bottom: 4px;
-}
-
-body.dark .created-at {
-    color: #aaa;
-}
-
-/* === Адаптивность === */
-@media (max-width: 600px) {
-    .task-list .task-item {
-        flex: 1 1 100%;
-        max-width: 100%;
-    }
-}
+/* ===== ДЕКОР ДАТЫ ===== */
+.created-at { font-size: 0.8rem; color: #888; }
+body.dark .created-at { color: #aaa; }

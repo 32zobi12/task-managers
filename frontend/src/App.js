@@ -7,6 +7,8 @@ import RegisterForm from './components/RegisterForm';
 import './App.css';
 import './styles/themes.css'; // <-- Добавим файл тем
 import Profile from './components/Profile';
+import { FaSun, FaMoon } from 'react-icons/fa';
+
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [darkMode, setDarkMode] = useState(() => {
@@ -34,9 +36,24 @@ const App = () => {
             <div className={`app-container ${darkMode ? 'dark' : 'light'}`}>
                 <div className="header">
                     <h1 className="app-title">Task Manager</h1>
-                    <button className="theme-toggle" onClick={() => setDarkMode(prev => !prev)}>
-                        {darkMode ? 'Светлая тема' : 'Тёмная тема'}
-                    </button>
+                    <div className="theme-toggle-wrapper">
+                        <input
+                            type="checkbox"
+                            id="theme-toggle"
+                            checked={darkMode}
+                            onChange={() => {
+                                const newTheme = !darkMode;
+                                setDarkMode(newTheme);
+                                localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+                            }}
+                        />
+                        <label htmlFor="theme-toggle" className="theme-toggle-label">
+                            <span className="icon sun"><FaSun/></span>
+                            <span className="icon moon"><FaMoon/></span>
+                            <span className="ball"></span>
+                        </label>
+                    </div>
+
                 </div>
                 <nav className="navigation">
                     {isAuthenticated ? (

@@ -90,7 +90,7 @@ const TaskEditForm = ({ taskId, onCancel, onUpdate }) => {
                         onChange={handleChange}
                         maxLength={255}
                         required
-                        className="task-input"
+                        className="task-input1"
                     />
                 </label>
 

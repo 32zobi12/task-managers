@@ -11,9 +11,8 @@
 
 /*dark mode moon or sun*/
 .theme-toggle-wrapper {
-    position: absolute;
-    top: 105px;
-    left: 1600px;
+    position: static;
+
     z-index: 100;
 }
 

@@ -35,7 +35,7 @@ const App = () => {
         <Router>
             <div className={`app-container ${darkMode ? 'dark' : 'light'}`}>
                 <div className="header">
-                    <h1 className="app-title">Task Manager</h1>
+                    <h1 className="app-title">TODO-Manager</h1>
                     <div className="theme-toggle-wrapper">
                         <input
                             type="checkbox"

@@ -113,7 +113,7 @@ const TaskList = () => {
 
     return (
         <div className={theme}>
-            {/*  ▸ новый «обёрточный» контейнер: центр + отступы + max-width  */}
+            {/*  ▸ новый  контейнер: центр + отступы  */}
             <div className="task-list-wrapper">
                 <DateTimeDisplay />
 
